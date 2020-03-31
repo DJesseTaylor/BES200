@@ -18,9 +18,9 @@ namespace LibraryApi.Domain
             // etc. etc.
 
             modelBuilder.Entity<Book>().HasData(
-                    new Book {  Id = 1, Title = "Walden", Author="Thoreau", Genre="Philosophy", NumberOfPages = 322},
-                    new Book {  Id = 2, Title="In the Penal Colony", Author="Franz Kafka", Genre="Fiction", NumberOfPages = 180},
-                    new Book {  Id = 3, Title = "The Trial", Author="Franz Kafka", Genre="Fiction", NumberOfPages = 223}
+                    new Book {  Id = 1, Title = "Walden", Author="Thoreau", Genre="Philosophy", NumberOfPages = 322, InInventory = true},
+                    new Book {  Id = 2, Title="In the Penal Colony", Author="Franz Kafka", Genre="Fiction", NumberOfPages = 180, InInventory = true },
+                    new Book {  Id = 3, Title = "The Trial", Author="Franz Kafka", Genre="Fiction", NumberOfPages = 223, InInventory = true }
                 );
         }
     }
