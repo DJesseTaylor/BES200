@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using LibraryApi.Controllers;
 using LibraryApi.Domain;
 using LibraryApi.Services;
 using Microsoft.AspNetCore.Builder;
@@ -32,7 +34,13 @@ namespace LibraryApi
         {
 
             services.AddTransient<IGenerateEmployeeIds, EmployeeIdGenerator>();
-            services.AddControllers();
+            services.AddTransient<ILookupOnCallDevelopers, MicrosoftTeamsOnCallDeveloperLookup>();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                });
             services.AddDbContext<LibraryDataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("LibraryDatabase"))
                 // Don't do this!
@@ -55,6 +63,11 @@ namespace LibraryApi
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
+            });
+
+            services.AddDistributedRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetValue<string>("redisHost");
             });
         }
 
