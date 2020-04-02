@@ -1,0 +1,38 @@
+version: "3.7"
+services: 
+    api:
+        image: jessetaylor/libraryapi
+        build: 
+            context: .
+            dockerfile: LibraryApi/Dockerfile
+        networks: 
+            - my-network
+        environment:
+            - Rabbit:HostName=rabbit
+            - Rabbit:Port=5672
+            - Rabbit:UserName=guest
+            - Rabbit:Password=guest
+            - Rabbit:VHost=/
+            - redistHost=redis
+            - ConnectionStrings__LibraryDatabase=server=sql;database=library;user id=SA;password=Tokyo!_Joe138 
+    sql:
+        image: jessetaylor/librarysql
+        build:
+            context: ./Sql
+            dockerfile: Dockerfile
+    redis:
+        image: redis:latest
+        ports:
+            - "6379:6379"
+        networks:
+            - my-network
+    rabbit:
+        image: rabbitmq:3-management
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        networks:
+            - my-network
+networks: 
+    my-network:
+        driver: bridge
