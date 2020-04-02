@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using RabbitMqUtils;
 
 namespace LibraryApi
 {
@@ -35,6 +36,9 @@ namespace LibraryApi
 
             services.AddTransient<IGenerateEmployeeIds, EmployeeIdGenerator>();
             services.AddTransient<ILookupOnCallDevelopers, MicrosoftTeamsOnCallDeveloperLookup>();
+            services.AddRabbit(Configuration);
+            services.AddTransient<IWriteToTheReservationQueue, RabbitMqReservationProcessor>();
+
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
